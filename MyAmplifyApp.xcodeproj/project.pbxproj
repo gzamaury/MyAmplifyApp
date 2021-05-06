@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,9 @@
 		9651A79F26437C610093DA0D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9651A79D26437C610093DA0D /* LaunchScreen.storyboard */; };
 		9651A7AA26437C630093DA0D /* MyAmplifyAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9651A7A926437C630093DA0D /* MyAmplifyAppTests.swift */; };
 		9651A7B526437C630093DA0D /* MyAmplifyAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9651A7B426437C630093DA0D /* MyAmplifyAppUITests.swift */; };
+		9651A7C426438A420093DA0D /* AWSDataStorePlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 9651A7C326438A420093DA0D /* AWSDataStorePlugin */; };
+		9651A7C626438A420093DA0D /* AWSAPIPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 9651A7C526438A420093DA0D /* AWSAPIPlugin */; };
+		9651A7C826438A420093DA0D /* Amplify in Frameworks */ = {isa = PBXBuildFile; productRef = 9651A7C726438A420093DA0D /* Amplify */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +59,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9651A7C826438A420093DA0D /* Amplify in Frameworks */,
+				9651A7C626438A420093DA0D /* AWSAPIPlugin in Frameworks */,
+				9651A7C426438A420093DA0D /* AWSDataStorePlugin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -144,6 +150,11 @@
 			dependencies = (
 			);
 			name = MyAmplifyApp;
+			packageProductDependencies = (
+				9651A7C326438A420093DA0D /* AWSDataStorePlugin */,
+				9651A7C526438A420093DA0D /* AWSAPIPlugin */,
+				9651A7C726438A420093DA0D /* Amplify */,
+			);
 			productName = MyAmplifyApp;
 			productReference = 9651A78F26437C570093DA0D /* MyAmplifyApp.app */;
 			productType = "com.apple.product-type.application";
@@ -215,6 +226,9 @@
 				Base,
 			);
 			mainGroup = 9651A78626437C570093DA0D;
+			packageReferences = (
+				9651A7C226438A420093DA0D /* XCRemoteSwiftPackageReference "amplify-ios" */,
+			);
 			productRefGroup = 9651A79026437C570093DA0D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -593,6 +607,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9651A7C226438A420093DA0D /* XCRemoteSwiftPackageReference "amplify-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/aws-amplify/amplify-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9651A7C326438A420093DA0D /* AWSDataStorePlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9651A7C226438A420093DA0D /* XCRemoteSwiftPackageReference "amplify-ios" */;
+			productName = AWSDataStorePlugin;
+		};
+		9651A7C526438A420093DA0D /* AWSAPIPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9651A7C226438A420093DA0D /* XCRemoteSwiftPackageReference "amplify-ios" */;
+			productName = AWSAPIPlugin;
+		};
+		9651A7C726438A420093DA0D /* Amplify */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9651A7C226438A420093DA0D /* XCRemoteSwiftPackageReference "amplify-ios" */;
+			productName = Amplify;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9651A78726437C570093DA0D /* Project object */;
 }
