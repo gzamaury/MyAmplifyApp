@@ -1,1 +1,15 @@
-{}
+{
+  "auth": {
+    "cognito27ac4a3c": {
+      "service": "Cognito",
+      "serviceType": "managed",
+      "providerPlugin": "awscloudformation"
+    }
+  },
+  "analytics": {
+    "myamplifyapp": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+    "appName": "myamplifyapp",
+    "roleName": "pinpointLambdaRoled5547aa7",
+    "cloudformationPolicyName": "cloudformationPolicyd5547aa7",
+    "cloudWatchPolicyName": "cloudWatchPolicyd5547aa7",
+    "pinpointPolicyName": "pinpointPolicyd5547aa7",
+    "authPolicyName": "pinpoint_amplify_d5547aa7",
+    "unauthPolicyName": "pinpoint_amplify_d5547aa7",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}
