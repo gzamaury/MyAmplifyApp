@@ -59,15 +59,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 // Mark: AppDelegate Extension
 extension AppDelegate {
+    
+    // Global Properties
+    // will be used across all Amplify.Analytics.record(event:) calls
+    func setAnalyticsGlobalProperties() {
+        let globalProperties: AnalyticsProperties = ["globalPropertyKey": "value"]
+        Amplify.Analytics.registerGlobalProperties(globalProperties)
+        
+        print("Analytics global propierties registered")
+        
+        // Unregister global properties
+        // Amplify.Analytics.unregisterGlobalProperties()
+    }
+    
     func configureAmplify() {
         do {
             Amplify.Logging.logLevel = .verbose
             
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.add(plugin: AWSPinpointAnalyticsPlugin())
+            
             try Amplify.configure()
             
             print("Amplify configured with Auth and Analytics plugins")
+            
+            setAnalyticsGlobalProperties()
         } catch {
             print("Failed to initialize Amplify with: \(error)")
         }
