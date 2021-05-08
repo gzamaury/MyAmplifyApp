@@ -7,6 +7,8 @@
 
 import UIKit
 import Amplify
+import AWSPinpointAnalyticsPlugin
+import AWSCognitoAuthPlugin
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,12 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        do {
-            Amplify.Logging.logLevel = .verbose
-            try Amplify.configure()
-        } catch {
-            print("An error occurred setting up Amplify: \(error)")
-        }
+        configureAmplify()
         
         return true
     }
@@ -43,3 +40,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+
+// Mark: AppDelegate Extension
+extension AppDelegate {
+    func configureAmplify() {
+        do {
+            Amplify.Logging.logLevel = .verbose
+            
+            try Amplify.add(plugin: AWSCognitoAuthPlugin())
+            try Amplify.add(plugin: AWSPinpointAnalyticsPlugin())
+            try Amplify.configure()
+            
+            print("Amplify configured with Auth and Analytics plugins")
+        } catch {
+            print("Failed to initialize Amplify with: \(error)")
+        }
+    }
+}
