@@ -40,6 +40,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+// Flush Events - update amplifyconfiguration.json
+// default configuration flush out to the network every 60 seconds
+//
+//"plugins": {
+//    "awsPinpointAnalyticsPlugin": {
+//        "pinpointAnalytics": {
+//            ...
+//        },
+//        "pinpointTargeting": {
+//            ...
+//        },
+//        "autoFlushEventsInterval": 60
+//}
+//
+// Note: If you set autoFlushEventsInterval to 0, you are responsible for calling Amplify.Analytics.flushEvents() to submit the recorded events to the backend.
+
 
 // Mark: AppDelegate Extension
 extension AppDelegate {
