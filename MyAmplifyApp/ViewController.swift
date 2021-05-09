@@ -7,6 +7,8 @@
 
 import UIKit
 import Amplify
+import AWSPinpointAnalyticsPlugin
+import AWSPinpoint
 
 class ViewController: UIViewController {
 
@@ -23,6 +25,18 @@ class ViewController: UIViewController {
 
 // MARK: ViewController Extension
 extension ViewController {
+    
+    func getEscapeHatch() {
+        do {
+            let plugin = try Amplify.Analytics.getPlugin(for: "awsPinpointAnalyticsPlugin") as! AWSPinpointAnalyticsPlugin
+            
+            let awsPinpoint = plugin.getEscapeHatch()
+            
+        } catch {
+            print("Get escape hatch failed with error: \(error)")
+        }
+    }
+    
     
     func identifyUser() {
         guard let user = Amplify.Auth.getCurrentUser() else {
