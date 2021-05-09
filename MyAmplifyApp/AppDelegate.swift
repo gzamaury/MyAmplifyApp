@@ -60,6 +60,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 // Mark: AppDelegate Extension
 extension AppDelegate {
     
+    // Disable Analytics
+    // Analytics are sent to the backend automatically (it’s enabled by default).
+    
+    func disableAnalytics() {
+        // To disable it call:
+        Amplify.Analytics.disable()
+        
+        // To re-eneble it call:
+        //Amplify.Analytics.enable()
+    }
+    
+    
     // Global Properties
     // will be used across all Amplify.Analytics.record(event:) calls
     func setAnalyticsGlobalProperties() {
