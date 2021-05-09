@@ -23,6 +23,22 @@ class ViewController: UIViewController {
 
 // MARK: ViewController Extension
 extension ViewController {
+    
+    func identifyUser() {
+        guard let user = Amplify.Auth.getCurrentUser() else {
+            print("Could not get user, parhaps the user is not signed in")
+            return
+        }
+        
+        let location = AnalyticsUserProfile.Location(latitude: 47.606209, longitude: -122.332069, postalCode: "98122", city: "Seattle", region: "WA", country: "USA")
+        
+        let properties: AnalyticsProperties = ["phoneNumber": "+11234567890", "age": 25]
+        
+        let userProfile = AnalyticsUserProfile(name: user.username, email: "name@example.com", location: location, properties: properties)
+        
+        Amplify.Analytics.identifyUser(user.userId, withProfile: userProfile)
+    }
+    
     func recordEvents() {
         let properties: AnalyticsProperties = [
             "eventPropertyStringKey": "eventPropertyStringValue",
