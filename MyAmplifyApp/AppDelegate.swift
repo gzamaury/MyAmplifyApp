@@ -9,6 +9,7 @@ import UIKit
 import Amplify
 import AWSPinpointAnalyticsPlugin
 import AWSCognitoAuthPlugin
+import AWSAPIPlugin
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -90,10 +91,11 @@ extension AppDelegate {
             
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.add(plugin: AWSPinpointAnalyticsPlugin())
+            try Amplify.add(plugin: AWSAPIPlugin(modelRegistration: AmplifyModels()))
             
             try Amplify.configure()
             
-            print("Amplify configured with Auth and Analytics plugins")
+            print("Amplify configured with Auth, Analytics and API plugins")
             
             setAnalyticsGlobalProperties()
         } catch {
