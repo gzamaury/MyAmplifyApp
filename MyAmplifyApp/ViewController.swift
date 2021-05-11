@@ -21,7 +21,8 @@ class ViewController: UIViewController {
         
         //recordEvents()
         //dataSink = createTodo()
-        dataSink = getTodo()
+        //dataSink = getTodo()
+        dataSink = listTodos()
     }
 
 
@@ -31,6 +32,29 @@ class ViewController: UIViewController {
 // MARK: ViewController Extension
 extension ViewController {
     
+    func listTodos() -> AnyCancellable {
+        let todo = Todo.keys
+        let predicate = todo.name == "my first todo" && todo.description == "todo description"
+        let sink = Amplify.API
+            .query(request: .paginatedList(Todo.self, where: predicate, limit: 1000))
+            .resultPublisher
+            .sink {
+                if case let .failure(error) = $0 {
+                    print("Got failed event with error \(error)")
+                }
+            }
+            receiveValue: { result in
+                switch result {
+                case .success(let todos):
+                    print("Successfully retrieved todos: \(todos)")
+                case .failure(let error):
+                    print("Got failed result with \(error.errorDescription)")
+                }
+                
+            }
+        return sink
+    }
+    
     func getTodo() -> AnyCancellable {
         let sink = Amplify.API
             .query(request: .get(Todo.self, byId: "16D978D3-DD7A-4909-BAB0-42A728F2BECA"))
@@ -39,7 +63,6 @@ extension ViewController {
                 if case let .failure(error) = $0 {
                     print("Got failed event with error \(error)")
                 }
-                
             }
             receiveValue: { result in
                 switch result {
@@ -63,7 +86,7 @@ extension ViewController {
             .resultPublisher
             .sink { completion in
                 if case let .failure(error) = completion {
-                    print("Failed to create graphql \(error)")
+                    print("Failed to create graphql \(error.errorDescription)")
                 }
                 
             }
