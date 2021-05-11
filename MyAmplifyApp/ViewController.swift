@@ -9,14 +9,18 @@ import UIKit
 import Amplify
 import AWSPinpointAnalyticsPlugin
 import AWSPinpoint
+import Combine
 
 class ViewController: UIViewController {
 
+    var dataSink: AnyCancellable?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        recordEvents()
+        //recordEvents()
+        dataSink = createTodo()
     }
 
 
@@ -25,6 +29,28 @@ class ViewController: UIViewController {
 
 // MARK: ViewController Extension
 extension ViewController {
+    
+    func createTodo() -> AnyCancellable {
+        let todo = Todo(name: "my first todo", description: "todo description")
+        let sink = Amplify.API.mutate(request: .create(todo))
+            .resultPublisher
+            .sink { completion in
+                if case let .failure(error) = completion {
+                    print("Failed to create graphql \(error)")
+                }
+                
+            }
+            receiveValue: { result in
+                switch result {
+                case .success(let todo):
+                    print("Successfully created the todo: \(todo)")
+                case .failure(let graphQLError):
+                    print("Could not decode result: \(graphQLError)")
+                }
+                
+            }
+        return sink
+    }
     
     func getEscapeHatch() {
         do {
