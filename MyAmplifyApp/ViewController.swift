@@ -20,7 +20,8 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         //recordEvents()
-        dataSink = createTodo()
+        //dataSink = createTodo()
+        dataSink = getTodo()
     }
 
 
@@ -29,6 +30,32 @@ class ViewController: UIViewController {
 
 // MARK: ViewController Extension
 extension ViewController {
+    
+    func getTodo() -> AnyCancellable {
+        let sink = Amplify.API
+            .query(request: .get(Todo.self, byId: "16D978D3-DD7A-4909-BAB0-42A728F2BECA"))
+            .resultPublisher
+            .sink {
+                if case let .failure(error) = $0 {
+                    print("Got failed event with error \(error)")
+                }
+                
+            }
+            receiveValue: { result in
+                switch result {
+                case .success(let todo):
+                    guard let todo = todo else {
+                        print("Could not find todo")
+                        return
+                    }
+                    print("Successfully retrieved todo : \(todo)")
+                case .failure(let error):
+                    print("Got failed result with \(error)")
+                }
+                
+            }
+        return sink
+    }
     
     func createTodo() -> AnyCancellable {
         let todo = Todo(name: "my first todo", description: "todo description")
