@@ -14,6 +14,8 @@ import Combine
 class ViewController: UIViewController {
 
     var dataSink: AnyCancellable?
+    var todos: [Todo] = []
+    var currentPage: List<Todo>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +24,9 @@ class ViewController: UIViewController {
         //recordEvents()
         //dataSink = createTodo()
         //dataSink = getTodo()
-        dataSink = listTodos()
+        //dataSink = listTodos()
+        listFirstPage()
+        listNextPage()
     }
 
 
@@ -32,6 +36,40 @@ class ViewController: UIViewController {
 // MARK: ViewController Extension
 extension ViewController {
     
+    func listFirstPage() {
+        let todo = Todo.keys
+        let predicate = todo.name == "my first todo" && todo.description == "todo description"
+        Amplify.API.query(request: .paginatedList(Todo.self, where: predicate, limit: 1000)) { event in
+            switch event {
+            case .success(let result):
+                switch result {
+                case .success(let todos):
+                    print("Successfully retrieved list of todos: \(todos)")
+                    self.currentPage = todos
+                    self.todos.append(contentsOf: todos)
+                case .failure(let error):
+                    print("Got failed result with \(error.errorDescription)")
+                }
+            case .failure(let error):
+                print("Got failed event with error \(error)")
+            }
+        }
+    }
+    
+    func listNextPage() {
+        if let current = currentPage, current.hasNextPage() {
+            current.getNextPage() { result in
+                switch result {
+                case .success(let todos):
+                    self.todos.append(contentsOf: todos)
+                    self.currentPage = todos
+                case .failure(let coreError):
+                    print("Failed to get next page \(coreError)")
+                }
+            }
+        }
+    }
+
     func listTodos() -> AnyCancellable {
         let todo = Todo.keys
         let predicate = todo.name == "my first todo" && todo.description == "todo description"
