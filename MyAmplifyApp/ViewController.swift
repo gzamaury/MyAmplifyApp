@@ -25,8 +25,9 @@ class ViewController: UIViewController {
         //dataSink = createTodo()
         //dataSink = getTodo()
         //dataSink = listTodos()
-        listFirstPage()
-        listNextPage()
+        //listFirstPage()
+        //listNextPage()
+        listAllPages()
     }
 
 
@@ -36,10 +37,10 @@ class ViewController: UIViewController {
 // MARK: ViewController Extension
 extension ViewController {
     
-    func listFirstPage() {
+    func listAllPages() {  // Updated from 'listFirstPage'
         let todo = Todo.keys
-        let predicate = todo.name == "my first todo" && todo.description == "todo description"
-        Amplify.API.query(request: .paginatedList(Todo.self, where: predicate, limit: 1000)) { event in
+        let predicate = todo.name.beginsWith("my") && todo.description == "todo description"
+        Amplify.API.query(request: .paginatedList(Todo.self, where: predicate, limit: 1)) { event in
             switch event {
             case .success(let result):
                 switch result {
@@ -47,6 +48,8 @@ extension ViewController {
                     print("Successfully retrieved list of todos: \(todos)")
                     self.currentPage = todos
                     self.todos.append(contentsOf: todos)
+                    print("Todos count: \(self.todos.count)")
+                    self.listNextPageRecursively() // Added
                 case .failure(let error):
                     print("Got failed result with \(error.errorDescription)")
                 }
@@ -56,13 +59,15 @@ extension ViewController {
         }
     }
     
-    func listNextPage() {
+    func listNextPageRecursively() { // Updated from 'listNextPage'
         if let current = currentPage, current.hasNextPage() {
             current.getNextPage() { result in
                 switch result {
                 case .success(let todos):
                     self.todos.append(contentsOf: todos)
                     self.currentPage = todos
+                    print("Todos count: \(self.todos.count)")
+                    self.listNextPageRecursively()
                 case .failure(let coreError):
                     print("Failed to get next page \(coreError)")
                 }
