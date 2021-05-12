@@ -27,15 +27,51 @@ class ViewController: UIViewController {
         //dataSink = listTodos()
         //listFirstPage()
         //listNextPage()
-        listAllPages()
+        //listAllPages()
+        dataSink = updateTodo()
     }
-
-
 }
 
 
 // MARK: ViewController Extension
 extension ViewController {
+    
+    func updateTodo() -> AnyCancellable? {
+        Amplify.API.query(request: .list(Todo.self, where: Todo.keys.name.eq("my first todo")))
+            .resultPublisher
+            .sink {
+                if case let .failure(error) = $0 {
+                    print("Got failed event with error \(error)")
+                }
+            }
+            receiveValue: { result in
+                switch(result) {
+                case .success(let todos):
+                    guard todos.count == 1, var updatedTodo = todos.first else {
+                        print("Did not find exactly one todo")
+                        return
+                    }
+                    updatedTodo.description = "updated description"
+                    self.dataSink = Amplify.API.mutate(request: .update(updatedTodo))
+                        .resultPublisher
+                        .sink {
+                            if case let .failure(error) = $0 {
+                                print("Got failed event with error \(error)")
+                            }
+                        }
+                        receiveValue: { result in
+                            switch(result) {
+                            case .success(let todo):
+                                print("Successfully updated todo: \(todo)")
+                            case .failure(let error):
+                                print("Got failed result with \(error.errorDescription)")
+                            }
+                        }
+                case .failure(let error):
+                    print("Got failed result with \(error)")
+                }
+            }
+    }
     
     func listAllPages() {  // Updated from 'listFirstPage'
         let todo = Todo.keys
