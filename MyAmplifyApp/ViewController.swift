@@ -52,6 +52,15 @@ class ViewController: UIViewController {
 // MARK: ViewController Extension
 extension ViewController {
     
+    // Unsubscribing from updates
+    func unsubscribeUpdates() {
+        // subscription is still connected and any other attached subscribers will continue to receive subscription data
+        dataSink?.cancel()
+        
+        // subscription is now disconnected and any downstream subscribers will also be cancelled
+        subscription?.cancel()
+    }
+    
     func createSubscription() {
         self.subscription = Amplify.API.subscribe(request: .subscription(of: Todo.self, type: .onCreate))
         
