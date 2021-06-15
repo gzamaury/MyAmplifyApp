@@ -87,7 +87,7 @@ extension AppDelegate {
     
     func configureAmplify() {
         do {
-            Amplify.Logging.logLevel = .verbose
+            Amplify.Logging.logLevel = .debug
             
             try Amplify.add(plugin: AWSCognitoAuthPlugin())
             try Amplify.add(plugin: AWSPinpointAnalyticsPlugin())

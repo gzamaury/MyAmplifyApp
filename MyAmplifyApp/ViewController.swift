@@ -13,9 +13,23 @@ import Combine
 
 class ViewController: UIViewController {
 
+    var subscription: GraphQLSubscriptionOperation<Todo>?
     var dataSink: AnyCancellable?
+
+    var sink: AnyCancellable?
     var todos: [Todo] = []
     var currentPage: List<Todo>?
+    
+    @IBAction func CreateBtn(_ sender: UIButton) {
+        print("Touch Up inside!")
+        let todo = Todo(name: "my test subscription todo", description: "test subscription")
+        _ = Amplify.API.mutate(request: .create(todo))
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("viewDidDisappear...")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,13 +42,39 @@ class ViewController: UIViewController {
         //listFirstPage()
         //listNextPage()
         //listAllPages()
-        dataSink = updateTodo()
+        //dataSink = updateTodo()
+        createSubscription()
+
     }
 }
 
 
 // MARK: ViewController Extension
 extension ViewController {
+    
+    func createSubscription() {
+        self.subscription = Amplify.API.subscribe(request: .subscription(of: Todo.self, type: .onCreate))
+        
+        self.dataSink = subscription?
+            .subscriptionDataPublisher
+            .print("subs: ")
+            .sink {
+            if case let .failure(apiError) = $0 {
+                print("Subscription has terminated with \(apiError)")
+            } else
+            if case .finished = $0 {
+                print("Subscription has closed successfully")
+            }
+        }
+        receiveValue: { result in
+            switch result {
+            case .success(let createdTodo):
+                print("Successfully got todo from subscription: \(createdTodo)")
+            case .failure(let error):
+                print("Got failed result with \(error.errorDescription)")
+            }
+        }
+    }
     
     func updateTodo() -> AnyCancellable? {
         Amplify.API.query(request: .list(Todo.self, where: Todo.keys.name.eq("my first todo")))
@@ -163,6 +203,7 @@ extension ViewController {
         let todo = Todo(name: "my first todo", description: "todo description")
         let sink = Amplify.API.mutate(request: .create(todo))
             .resultPublisher
+            .print("create: ")
             .sink { completion in
                 if case let .failure(error) = completion {
                     print("Failed to create graphql \(error.errorDescription)")
